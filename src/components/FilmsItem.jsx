@@ -1,26 +1,72 @@
-import React from 'react'
+import React from 'react';
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import PropTypes from 'prop-types';
 
-const Wrapper = styled.div`
-  padding: 10px;
+import getIdFromUrl from '../module/getIdFromUrl.js'
+
+const FilmItem = styled.li`
+  padding: 20px;
+  border-bottom: 1px solid #fff;
+  list-style-type: none;
   cursor: pointer;
-  color: black;
+  display: flex;
+  background: transparent;
+  transition: all 0.50s ease;
   &:hover {
-    background-color: skyblue;
-    color: white;
+    background: ${({ theme }) => theme.hover};
+    color: ${({ theme }) => theme.text};
+  }
+  &:last-child {
+	  border-bottom: none;
+  }
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
+`;
+const StyledLink = styled(Link)`
+	color: ${({ theme }) => theme.text};
+	text-decoration: none;
+  display: flex;
+  width: 100%;
+`;
+const Poster = styled.div`
+	width: 150px;
+	height: 150px;
+	background: ${({ theme }) => theme.text};
+  margin-right: 25px;
+  @media (max-width: 768px) {
+    margin-right: 10px;
+    width: 80px;
+	  height: 80px;
+  }
+`;
+const Title = styled.h3`
+  font-size: 30px;
+  @media (max-width: 992px) {
+    font-size: 20px;
+  }
+  @media (max-width: 768px) {
+    font-size: 16px;
   }
 `;
 
 function FilmsItem({ title, url }) {
-
-	let filmId = url.slice(-2, -1);
-
-	return (
-		<Link to={`/films/${filmId}`} key={filmId}>
-			<Wrapper>{title}</Wrapper>
-		</Link>
-	);
+  return (
+    <FilmItem>
+      <StyledLink to={`/films/${getIdFromUrl(url)}`} key={getIdFromUrl(url)}>
+        <Poster>
+        </Poster>
+        <Title>{title}</Title>
+      </StyledLink>
+    </FilmItem>
+  );
 }
 
-export default FilmsItem
+
+FilmsItem.propTypes = {
+  title: PropTypes.string,
+  url: PropTypes.string,
+};
+
+export default FilmsItem;

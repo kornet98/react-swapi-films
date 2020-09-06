@@ -1,49 +1,60 @@
 import React, { useState } from 'react';
-//import axios from "axios";
+import { useHistory } from 'react-router-dom';
+import styled from "styled-components";
 
-//import SearchPage from '../SearchPage.jsx';
-import { Redirect } from 'react-router-dom';
+
+const Form = styled.form`
+	display: flex;
+	align-items: center;
+`
+const Input = styled.input`
+	padding: 8px;
+	background: #2b3e50;
+	color:#fff;
+	font-size: 16px;
+	border: 1px solid rgba(0,0,0,.15);
+		&:focus{
+			outline: none;
+			border-color: #ebebeb;
+    }
+`
+const ButtonInput = styled.input`
+	color: #fff;
+	font-size: 16px;
+	text-transform: uppercase;
+	background-color: #4e5d6c;
+	border: 1px solid #4e5d6c;
+	padding: 8px;
+		&:hover{
+			border-color: #ebebeb;
+    }
+`
+
 
 const SearchForm = () => {
 
-	const [searchTerm, setSearchTerm] = useState('');
-	const [isSubmited, setIsSubmited] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-	const handleChange = event => {
-		setSearchTerm(event.target.value)
-	}
+  let history = useHistory();
 
+  const handleChange = event => {
+    setSearchTerm(event.target.value);
+  }
 
+  const handleSubmit = event => {
+    history.push(`/search/${searchTerm}`);
+    setSearchTerm('');
+    event.preventDefault();
+  }
 
-	const handleSubmit = event => {
-		setIsSubmited(true)
-		//console.log(searchPeople);
-		event.preventDefault();
-	}
-	//const id = Number(match.params.id)
-	//const toPerson = useCallback((person, index) => <PersonListItem name={person.name} id={index + 1} key={index} />);
-	return (
-		<div className="container">
-			<form onSubmit={handleSubmit} className="search-form">
-				<input type="text" value={searchTerm} onChange={handleChange} min='2' />
-				<input type="submit" value="Search" />
-			</form>
-			{isSubmited &&
-				<Redirect to={{
-					pathname: '/search',
-					state: {
-						searchTerm: searchTerm
-					}
-				}} />
-			}
-			{/* {searchPeople.length > 0 &&
-				<Redirect to={{
-					pathname: '/search',
-					state: { dataItems: searchPeople }
-				}} />
-			} */}
-		</div>
-	)
+  return (
+    <div>
+      <Form onSubmit={handleSubmit}>
+        <Input type="text" value={searchTerm} onChange={handleChange} min='2' placeholder="Search person..." />
+        <ButtonInput type="submit" value='Search' />
+      </Form>
+    </div>
+  )
 }
 
 export default SearchForm;

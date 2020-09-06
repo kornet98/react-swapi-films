@@ -1,32 +1,40 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import PersonListItem from './PersonListItem.jsx'
+import PersonListItem from './PersonListItem.jsx';
+import getIdFromUrl from '../module/getIdFromUrl.js';
 
-import getIdFromUrl from '../module/getIdFromUrl.js'
+function SearchPage() {
 
-function SearchPage({ location }) {
+  const [searchPeople, setSearchPeople] = useState([]);
+  const [loaded, setLoaded] = useState(false)
 
-	const [searchPeople, setSearchPeople] = useState([]);
-	const { searchTerm } = location.state;
-	const searchUrl = 'https://swapi.dev/api/people/?search='
+  let { searchTerm } = useParams();
+  const searchUrl = 'https://swapi.dev/api/people/?search=';
 
-	useEffect(() => {
-		axios.get(searchUrl + searchTerm)
-			.then((res) => {
-				console.log(res.data);
-				setSearchPeople(res.data.results);
-			});
-	}, [setSearchPeople]);
+  useEffect(() => {
+    axios.get(searchUrl + searchTerm)
+      .then((res) => {
+        setSearchPeople(res.data.results);
+        setLoaded(true)
+      });
+  }, [searchTerm]);
 
-
-	const toPerson = useCallback(person => <PersonListItem name={person.name} id={getIdFromUrl(person.url)} key={person.url} />);
-
-	return (
-		<div>
-			{searchPeople.length > 0 ? searchPeople.map(toPerson) : 'Sorry!!! There is no person whis such name:((('}
-		</div>
-	)
+  return (
+    <div>
+      {
+        loaded
+        &&
+        searchPeople.map(person =>
+          <PersonListItem
+            name={person.name}
+            id={getIdFromUrl(person.url)}
+            key={person.url}
+          />)
+      }
+    </div>
+  )
 }
 
 export default SearchPage;
