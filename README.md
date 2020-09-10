@@ -15,7 +15,7 @@ The program allows you to search for characters by name, view their detailed inf
 
 ### Step 1
 
-    - Clone this repo to your local machine using https://github.com/kornet98/react-swapi-films.git
+    - Clone this repo to your local machine
 	  - Open in your code editor
 
 ### Step 2
